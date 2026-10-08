@@ -40,6 +40,7 @@
   <h2>When information leaves your phone</h2>
   <p>Creating an account, signing in, or resetting a password sends your email and password to Supabase, which hosts our accounts database.</p>
   <p>If your version of the app offers the AI concierge, Claude-written prep plans or Claude-planned days, the app asks your permission before anything is sent, and you can withdraw it at any time in Settings → Privacy. With permission, asking a question or building a plan sends that question, the bundled destination brief for the country you are viewing, and a few trip details — the city you are based in, trip length, travel style, how comfortable you are with apps, and whether you will have a local phone number — to Anthropic through a server we operate, so an answer can be generated. When you ask Claude to plan your days, it also receives the interests and pace you chose, who is coming along if you say (children, a pet, or access needs such as a wheelchair) and a list of the guide’s own places near where you are staying, each marked only as walkable, a short ride, a day trip or further away. Your name, email, account identifier, photos, address and exact location are not included, and the content is used to produce your answer rather than to train models. Without permission, or where these features are not offered, nothing is sent to Anthropic at all.</p>
+  <p>If your version of the app shows top-rated places near where you are staying, it sends an approximate location of your stay — rounded to about 1 km — and the kind of place you asked for to Google, through a server we operate, to look them up. Your name, email, account identifier and exact location are not included. Google’s ratings are shown as Google provides them and are not stored by us.</p>
   <p>Exchange rates are fetched from a public rates service. That request contains no personal information.</p>
   <p>If crash reporting is enabled in a release build, a crash sends the error and the screen you were on. It is configured to send no user identifier, no device identifier and no IP address.</p>
   <h2>How long we keep it</h2>
@@ -51,6 +52,7 @@
   <h2>Who processes data for us</h2>
   <p>Supabase — accounts and profile storage.</p>
   <p>Anthropic — generates concierge answers, prep plans and planned days, via a server we operate, where those features are offered.</p>
+  <p>Google — looks up top-rated places near your stay, via a server we operate, where that feature is offered.</p>
   <p>Sentry — crash reports, when enabled, with identifiers stripped.</p>
   <p>Apple — sign in with Apple, Apple Maps for map display and directions, and Apple's geocoding service for finding addresses and the country you are in.</p>
   <p>We do not use advertising networks, analytics providers or data brokers.</p>
