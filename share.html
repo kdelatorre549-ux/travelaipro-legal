@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Travel AI Pro</title>
+<meta property="og:title" content="Collecting the world with Travel AI Pro">
+<meta property="og:description" content="Flags, a globe of everywhere you have been, and offline guides for the trip.">
+<style>
+  :root { color-scheme: light dark; }
+  body {
+    margin: 0 auto; padding: 56px 20px; max-width: 30rem; text-align: center;
+    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    color: #212529; background: #f5f6f7;
+  }
+  .flags { font-size: 2.6rem; line-height: 1.25; letter-spacing: 0.15em; margin: 0 0 1.2rem; word-wrap: break-word; }
+  h1 { font-size: 1.9rem; letter-spacing: -0.02em; margin: 0 0 0.4rem; }
+  p { color: #5b636a; margin: 0 0 2rem; }
+  a.btn { display: block; padding: 15px; border-radius: 999px; font-weight: 600; text-decoration: none; margin-top: 12px; }
+  .primary { background: #212529; color: #fff; }
+  .secondary { border: 1px solid rgba(33,37,41,0.18); color: #212529; }
+  @media (prefers-color-scheme: dark) {
+    body { color: #f3f4f6; background: #101215; } p { color: #aeb4bc; }
+    .primary { background: #f3f4f6; color: #101215; } .secondary { color: #f3f4f6; border-color: rgba(255,255,255,0.2); }
+  }
+</style>
+<body>
+  <div class="flags" id="flags"></div>
+  <h1 id="title">Collecting the world</h1>
+  <p id="sub">Flags unlock as you travel, on a globe of everywhere you have been.</p>
+  <a class="btn primary" href="travelaipro://travels">Open in Travel AI Pro</a>
+  <a class="btn secondary" href="./support.html">Get Travel AI Pro</a>
+  <script>
+    var q = new URLSearchParams(location.search);
+    var codes = (q.get('f') || '').split(',').filter(function (c) { return /^[A-Z]{2}$/.test(c); }).slice(0, 60);
+    var flag = function (c) { return String.fromCodePoint.apply(null, c.split('').map(function (ch) { return 0x1f1e6 + ch.charCodeAt(0) - 65; })); };
+    document.getElementById('flags').textContent = codes.map(flag).join(' ');
+    var kind = q.get('t');
+    if (kind === 'postcard' && codes.length === 1) {
+      document.getElementById('title').textContent = 'A postcard from ' + new Intl.DisplayNames(['en'], { type: 'region' }).of(codes[0]);
+    } else if (kind === 'stamp' && codes.length === 1) {
+      document.getElementById('title').textContent = 'A passport stamp from ' + new Intl.DisplayNames(['en'], { type: 'region' }).of(codes[0]);
+    } else if (kind === 'stamp' && codes.length) {
+      document.getElementById('title').textContent = codes.length + ' passport stamps';
+    } else if (kind === 'recap' && /^[0-9]{4}$/.test(q.get('y') || '')) {
+      document.getElementById('title').textContent = q.get('y') + ' in travel · ' + codes.length + (codes.length === 1 ? ' new flag' : ' new flags');
+    } else if (codes.length) {
+      document.getElementById('title').textContent = codes.length + (codes.length === 1 ? ' country collected' : ' countries collected');
+    }
+  </script>
+</body>
+</html>

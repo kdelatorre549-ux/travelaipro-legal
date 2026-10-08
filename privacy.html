@@ -24,7 +24,7 @@
 <body>
   <nav><a href="./support.html">Support</a><a href="./privacy.html">Privacy</a><a href="./terms.html">Terms</a></nav>
   <h1>Privacy policy</h1>
-  <p class="updated">Travel AI Pro · last updated 17 September 2026</p>
+  <p class="updated">Travel AI Pro · last updated 7 October 2026</p>
   <h2>The short version</h2>
   <p>Travel AI Pro works offline. The guides, photos, maps of what to see and app recommendations are all bundled into the app, so most of what you do here involves no server at all.</p>
   <p>We collect your name and email only if you choose to create an account. We do not track you, we do not use advertising, we do not sell or share your data, and we have no analytics.</p>
@@ -33,11 +33,13 @@
   <p>You can use every guide, map, checklist and currency tool without an account. Nothing above is collected if you browse as a guest.</p>
   <h2>What stays on your phone</h2>
   <p>Your location. When you look for a cash machine or nearby transport, the app reads your location on the device and hands it to Apple Maps. It is never sent to us and never stored.</p>
+  <p>Flags and addresses. If you turn on automatic flag check-off, the app reads your approximate location when you open it and asks Apple's geocoding service which country you are in. Only the country code is kept, on your phone. When you search for your hotel or a place to add to a loop, the address you type is sent to Apple's geocoding service to find it on the map. None of this is sent to us.</p>
   <p>Your photos. Photos you add to places you have visited are copied into the app’s own storage on your phone. There is no upload. They are not backed up to us, and deleting the app deletes them.</p>
+  <p>Finding past trips. If you choose Find past trips, the app reads the date and location of photos in your library on your phone, rounds each location to an area roughly 100 km across, and asks Apple's geocoding service which country each area is in. Only the countries you tick, and the date you first went, are saved — on your phone. Your photos themselves are never uploaded or copied.</p>
   <p>Your trip: destination, length, checklist progress, saved guides, the loops you build and the places you pick. All of it is stored locally on the device.</p>
   <h2>When information leaves your phone</h2>
   <p>Creating an account, signing in, or resetting a password sends your email and password to Supabase, which hosts our accounts database.</p>
-  <p>If your version of the app offers the AI concierge, asking it a question sends that question, and the bundled destination brief for the country you are viewing, to Anthropic through a server we operate, so an answer can be generated. Your name, email and account identifier are not included, and the question is used to produce your answer rather than to train models. Where the concierge is not offered, nothing is sent to Anthropic at all.</p>
+  <p>If your version of the app offers the AI concierge, Claude-written prep plans or Claude-planned days, the app asks your permission before anything is sent, and you can withdraw it at any time in Settings → Privacy. With permission, asking a question or building a plan sends that question, the bundled destination brief for the country you are viewing, and a few trip details — the city you are based in, trip length, travel style, how comfortable you are with apps, and whether you will have a local phone number — to Anthropic through a server we operate, so an answer can be generated. When you ask Claude to plan your days, it also receives the interests and pace you chose, who is coming along if you say (children, a pet, or access needs such as a wheelchair) and a list of the guide’s own places near where you are staying, each marked only as walkable, a short ride, a day trip or further away. Your name, email, account identifier, photos, address and exact location are not included, and the content is used to produce your answer rather than to train models. Without permission, or where these features are not offered, nothing is sent to Anthropic at all.</p>
   <p>Exchange rates are fetched from a public rates service. That request contains no personal information.</p>
   <p>If crash reporting is enabled in a release build, a crash sends the error and the screen you were on. It is configured to send no user identifier, no device identifier and no IP address.</p>
   <h2>How long we keep it</h2>
@@ -48,14 +50,14 @@
   <p>If you are in the UK, EU, California or anywhere with equivalent law, you may also request a copy of your data or ask us to correct or erase it. Email kdelatorre549+privacy@gmail.com and we will respond within 30 days.</p>
   <h2>Who processes data for us</h2>
   <p>Supabase — accounts and profile storage.</p>
-  <p>Anthropic — generates concierge answers, via a server we operate, where that feature is offered.</p>
+  <p>Anthropic — generates concierge answers, prep plans and planned days, via a server we operate, where those features are offered.</p>
   <p>Sentry — crash reports, when enabled, with identifiers stripped.</p>
-  <p>Apple — sign in with Apple, and Apple Maps for map display and directions.</p>
+  <p>Apple — sign in with Apple, Apple Maps for map display and directions, and Apple's geocoding service for finding addresses and the country you are in.</p>
   <p>We do not use advertising networks, analytics providers or data brokers.</p>
   <h2>Children</h2>
   <p>Travel AI Pro is not directed at children under 13, and we do not knowingly collect information from them. If you believe a child has created an account, email us and we will delete it.</p>
   <h2>Changes</h2>
-  <p>We will update this page if what we collect changes, and change the date at the top. This version is dated 17 September 2026.</p>
+  <p>We will update this page if what we collect changes, and change the date at the top. This version is dated 7 October 2026.</p>
   <p>Questions: kdelatorre549+privacy@gmail.com</p>
 </body>
 </html>
