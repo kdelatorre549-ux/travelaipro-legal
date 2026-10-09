@@ -37,6 +37,9 @@
     var kind = q.get('t');
     if (kind === 'postcard' && codes.length === 1) {
       document.getElementById('title').textContent = 'A postcard from ' + new Intl.DisplayNames(['en'], { type: 'region' }).of(codes[0]);
+    } else if (kind === 'loop' && codes.length) {
+      document.getElementById('title').textContent = 'A trip plan in ' + new Intl.DisplayNames(['en'], { type: 'region' }).of(codes[0]);
+      document.getElementById('sub').textContent = 'Day by day, stop by stop — made with Travel AI Pro.';
     } else if (kind === 'stamp' && codes.length === 1) {
       document.getElementById('title').textContent = 'A passport stamp from ' + new Intl.DisplayNames(['en'], { type: 'region' }).of(codes[0]);
     } else if (kind === 'stamp' && codes.length) {
