@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Join the crew — Travel AI Pro</title>
+<meta property="og:title" content="Join the crew on Travel AI Pro">
+<meta property="og:description" content="Open the link to see the trip plan and add to it.">
+<style>
+  :root { color-scheme: light dark; }
+  body {
+    margin: 0 auto; padding: 72px 20px; max-width: 30rem; text-align: center;
+    font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    color: #212529; background: #f5f6f7;
+  }
+  h1 { font-size: 1.8rem; letter-spacing: -0.02em; margin: 0 0 0.4rem; }
+  p { color: #3c4348; margin: 0 0 1.4rem; }
+  .btn {
+    display: block; padding: 16px; border-radius: 999px; text-decoration: none;
+    font-weight: 600; background: #212529; color: #fff; margin-bottom: 12px;
+  }
+  .btn.alt { background: transparent; color: #212529; border: 1px solid #ced4da; }
+  .small { font-size: 0.9rem; color: #6b7378; }
+  [hidden] { display: none; }
+  @media (prefers-color-scheme: dark) {
+    body { color: #e9ecef; background: #17191b; } p { color: #b8c0c5; }
+    .btn { background: #e9ecef; color: #17191b; } .btn.alt { color: #e9ecef; border-color: #3c4348; }
+  }
+</style>
+<body>
+  <h1>You're invited</h1>
+  <p id="lead">Someone wants you in their crew. Open the plan in Travel AI Pro to see it and add to it.</p>
+  <a id="open" class="btn" href="#">Open in Travel AI Pro</a>
+  
+  <p class="small">Don’t have the app yet? Install Travel AI Pro from the App Store, then tap the invite link again.</p>
+  <p id="bad" class="small" hidden>This link looks incomplete. Ask for the invite to be sent again.</p>
+  <script>
+    var t = new URLSearchParams(location.search).get('t') || '';
+    var open = document.getElementById('open');
+    if (/^[A-Za-z0-9_-]{10,64}$/.test(t)) {
+      open.href = 'travelaipro://join/' + encodeURIComponent(t);
+    } else {
+      open.hidden = true;
+      document.getElementById('bad').hidden = false;
+    }
+  </script>
+</body>
+</html>
