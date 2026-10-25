@@ -57,7 +57,7 @@
   <p>Anthropic — generates concierge answers, prep plans and planned days, and reads menu photos, via a server we operate, where those features are offered.</p>
   <p>Google — looks up top-rated places near your stay, via a server we operate, where that feature is offered.</p>
   <p>Sentry — crash reports, when enabled, with identifiers stripped.</p>
-  <p>RevenueCat — checks whether you have a Premium subscription. It receives a random purchase identifier created on your phone and the receipt Apple issues when you subscribe; never your name, email or payment card.</p>
+  <p>RevenueCat — checks whether you have a Premium subscription. It receives a random purchase identifier created on your phone and the receipt Apple issues when you subscribe; never your name, email or payment card. So that one subscription cannot be used by strangers' accounts, our server records which accounts (up to three) use that identifier.</p>
   <p>Cloudflare — hosts the server we operate that passes requests to Anthropic and Google. It sees those requests and the network address they come from, and does not keep menu photos.</p>
   <p>OpenStreetMap Foundation — finds a hotel or place by name, on devices where Apple Maps search is not available.</p>
   <p>Apple — sign in with Apple, Apple Maps for map display and directions, and Apple's geocoding service for finding addresses and the country you are in.</p>
