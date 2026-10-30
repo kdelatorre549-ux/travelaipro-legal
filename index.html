@@ -1,27 +1,459 @@
 <!doctype html>
 <html lang="en">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Travel AI Pro — Legal</title>
+<title>Travel AI Pro: be a pro before you land</title>
+<meta name="description" content="Offline travel guides for 12 countries: the apps locals use, how to pay, how to get around, and days planned around where you are staying. Taiwan is free forever.">
+<link rel="icon" href="./img/icon.png">
+<link rel="apple-touch-icon" href="./img/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
 <style>
-  :root { color-scheme: light dark; }
-  body {
-    margin: 0 auto; padding: 60px 20px; max-width: 34rem;
-    font: 16px/1.62 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-    color: #212529; background: #f5f6f7;
+  /* Travel AI Pro palette, from src/theme.ts. */
+  :root {
+    --ink: #212529; --ink70: #3c4348; --ink55: #676D74; --ink12: #DCDFE2;
+    --surface: #F5F6F7; --sunken: #EDEFF1; --white: #FFFFFF;
+    --night: #101215; --nightCard: #191C20;
+    --rose: #C0304A; --teal: #0B7A6B; --sky: #1D4FD8; --amber: #A65B00; --star: #F2A73B;
+    --display: "Plus Jakarta Sans", "Instrument Sans", system-ui, sans-serif;
+    --body: "Instrument Sans", system-ui, -apple-system, sans-serif;
+    --r-lg: 28px; --r-md: 20px; --pill: 999px;
   }
-  h1 { font-size: 1.7rem; letter-spacing: -0.02em; margin: 0 0 0.3rem; }
-  p { color: #3c4348; }
-  a { display: block; margin-top: 0.7rem; color: #212529; }
-  @media (prefers-color-scheme: dark) {
-    body { color: #e9ecef; background: #17191b; } p { color: #b8c0c5; } a { color: #e9ecef; }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; font: 17px/1.6 var(--body); color: var(--ink); background: var(--surface); -webkit-font-smoothing: antialiased; }
+  img { display: block; max-width: 100%; }
+  a { color: inherit; }
+  .wrap { width: min(1120px, 100% - 32px); margin: 0 auto; }
+  h1, h2, h3 { font-family: var(--display); font-weight: 800; letter-spacing: -0.025em; line-height: 1.08; margin: 0; }
+  .eyebrow { font: 700 13px/1 var(--body); letter-spacing: 0.14em; text-transform: uppercase; color: var(--rose); margin: 0 0 14px; }
+
+  /* Buttons */
+  .btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 22px; border-radius: var(--pill); font: 700 16px/1 var(--body); text-decoration: none; border: 0; cursor: pointer; transition: transform .15s ease; }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-light { background: var(--white); color: var(--ink); box-shadow: 0 6px 20px rgba(0,0,0,.18); }
+  .btn-dark { background: var(--ink); color: var(--white); }
+  .btn-ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--ink12); }
+  .btn img { width: 26px; height: 26px; border-radius: 7px; }
+
+  /* Nav: a floating white bar, as on the reference */
+  nav { position: fixed; top: 14px; left: 0; right: 0; z-index: 50; }
+  nav .bar { width: min(1120px, 100% - 32px); margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 58px; padding: 0 10px 0 16px; background: rgba(255,255,255,.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: var(--pill); box-shadow: 0 6px 24px rgba(16,18,21,.12); }
+  .brand { display: flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font: 800 19px/1 var(--display); letter-spacing: -0.02em; }
+  .brand img { width: 32px; height: 32px; border-radius: 9px; }
+  .navlinks { display: flex; gap: 4px; align-items: center; }
+  .navlinks a { text-decoration: none; font-weight: 600; font-size: 15px; padding: 9px 12px; border-radius: var(--pill); }
+  .navlinks a:hover { background: var(--sunken); }
+  .navlinks .sep { color: var(--ink12); }
+  .navlinks .cta { background: var(--rose); color: var(--white); padding: 11px 18px; margin-left: 6px; }
+  .navlinks .cta:hover { background: #a82840; }
+
+  .phone { width: min(300px, 74vw); aspect-ratio: 1320 / 2868; border-radius: 46px; padding: 10px; background: #0b0d10; box-shadow: 0 30px 70px rgba(16,18,21,.35), inset 0 0 0 2px #2a2e33; position: relative; }
+  .phone img { width: 100%; height: 100%; object-fit: cover; border-radius: 37px; }
+
+  section { padding: 96px 0; }
+  .intro { text-align: center; max-width: 40rem; margin: 0 auto 56px; }
+  .intro h2 { font-size: clamp(32px, 4.4vw, 48px); }
+  .intro p { color: var(--ink55); margin: 14px 0 0; }
+
+  /* ---------- The scrolling story ---------- */
+  .story { position: relative; height: 800vh; padding: 0; }
+  .story .anchor { position: absolute; left: 0; width: 1px; height: 1px; }
+  .stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+  .world { position: absolute; inset: 0; opacity: 0; transition: opacity .7s ease; }
+  .world.photo { background: var(--night) url(./img/taiwan.jpg) center/cover; opacity: 1; }
+  .world.photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(16,18,21,.6), rgba(16,18,21,.25) 55%, rgba(16,18,21,.45)); }
+  .world.c-prepare { background: #FBEFE9; }      /* warm, from rose */
+  .world.c-explore { background: var(--ink); }
+  .world.c-remember { background: var(--white); }
+  .story[data-step="1"] .c-prepare, .story[data-step="2"] .c-prepare,
+  .story[data-step="3"] .c-explore, .story[data-step="4"] .c-explore,
+  .story[data-step="5"] .c-remember, .story[data-step="6"] .c-remember { opacity: 1; }
+
+  .herocopy { position: absolute; left: 0; right: 0; top: 0; padding: 128px 16px 0; text-align: center; color: var(--white); z-index: 3;
+    transform: translateY(calc(var(--p0, 0) * -160px)); opacity: calc(1 - var(--p0, 0) * 1.6); }
+  .herocopy h1 { font-size: clamp(40px, 6.6vw, 74px); max-width: 13ch; margin: 0 auto; }
+  .herocopy .lead { font-size: clamp(16px, 2vw, 20px); max-width: 34rem; margin: 16px auto 24px; color: rgba(255,255,255,.9); }
+  .herocopy .ctas { display: flex; justify-content: center; }
+  .herocopy .note { margin: 14px 0 0; font-size: 14px; color: rgba(255,255,255,.82); }
+  .story:not([data-step="0"]) .herocopy { pointer-events: none; }
+
+  /* The phone and everything that moves with it */
+  .rig { position: absolute; left: 50%; top: 50%; z-index: 4; width: min(290px, 64vw);
+    transform: translate(calc(-50% + var(--rx, 0px)), calc(-50% + var(--ry, 0px))) rotate(var(--rr, 0deg)) scale(var(--rs, 1));
+    transition: transform .9s cubic-bezier(.22,.8,.24,1); will-change: transform; }
+  .rig .phone { width: 100%; }
+  .scr { position: absolute; inset: 10px; width: calc(100% - 20px) !important; height: calc(100% - 20px) !important; opacity: 0; transition: opacity .5s ease, transform .6s ease; transform: scale(1.04); }
+  .story[data-step="0"] .s0, .story[data-step="1"] .s1, .story[data-step="2"] .s2, .story[data-step="3"] .s3,
+  .story[data-step="4"] .s4, .story[data-step="5"] .s5, .story[data-step="6"] .s5 { opacity: 1; transform: none; }
+
+  /* Cards that slide out of the phone */
+  .pop { position: absolute; top: 58%; display: flex; flex-direction: column; gap: 2px; min-width: 210px; padding: 14px 16px; background: var(--white); color: var(--ink);
+    border-radius: 18px; box-shadow: 0 18px 40px rgba(16,18,21,.22); font-size: 14px; opacity: 0; transform: translateX(0) scale(.85); transition: opacity .45s ease, transform .7s cubic-bezier(.22,1.3,.36,1); z-index: 5; }
+  .pop b { font: 800 16px/1.2 var(--display); }
+  .pop span { color: var(--ink55); }
+  .pop.left { right: 62%; } .pop.right { left: 62%; }
+  .story[data-step="1"] .p1, .story[data-step="2"] .p2, .story[data-step="3"] .p3, .story[data-step="4"] .p4, .story[data-step="5"] .p5 { opacity: 1; }
+  .story[data-step="1"] .p1, .story[data-step="3"] .p3, .story[data-step="5"] .p5 { transform: translateX(-28px) rotate(-3deg); }
+  .story[data-step="2"] .p2, .story[data-step="4"] .p4 { transform: translateX(28px) rotate(3deg); }
+
+  /* Copy for each step, on the side the phone is not */
+  .steps { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+  .step { position: absolute; top: 50%; width: min(400px, 40vw); opacity: 0; transform: translateY(calc(-50% + 40px)); transition: opacity .5s ease, transform .7s ease; }
+  .step h2 { font-size: clamp(30px, 3.6vw, 46px); }
+  .step p:not(.eyebrow) { color: var(--ink70); margin: 14px 0 0; font-size: 18px; }
+  .t1, .t3, .t5 { right: max(16px, calc(50% - 540px)); }
+  .t2, .t4 { left: max(16px, calc(50% - 540px)); }
+  .story[data-step="1"] .t1, .story[data-step="2"] .t2, .story[data-step="3"] .t3, .story[data-step="4"] .t4, .story[data-step="5"] .t5 { opacity: 1; transform: translateY(-50%); }
+  .t3 h2, .t4 h2 { color: var(--white); }
+  .t3 p:not(.eyebrow), .t4 p:not(.eyebrow) { color: #AEB4BC; }
+  .t3 .eyebrow, .t4 .eyebrow { color: var(--star); }
+
+  /* The last step: the phone steps back and the trip's photos float around it */
+  .floaters { position: absolute; left: 50%; top: 50%; z-index: 2; }
+  .floaters img { position: absolute; max-width: none; width: 170px; aspect-ratio: 4/5; object-fit: cover; border-radius: 22px; box-shadow: 0 16px 36px rgba(16,18,21,.2);
+    left: -85px; top: -106px; opacity: 0; transform: translate(0, 0) rotate(0) scale(.6); transition: transform 1s cubic-bezier(.22,.9,.3,1), opacity .6s ease; }
+  .story[data-step="6"] .floaters img { opacity: 1; transform: translate(var(--x), var(--y)) rotate(var(--r)) scale(1); }
+  .story[data-step="6"] .rig { --rs: .78 !important; }
+
+  /* Chapter bar at the bottom, the current one lit */
+  .chapters { position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%); z-index: 6; display: flex; gap: 6px; padding: 6px; border-radius: var(--pill); background: rgba(255,255,255,.9); box-shadow: 0 6px 20px rgba(16,18,21,.14); opacity: 0; transition: opacity .4s; }
+  .story:not([data-step="0"]) .chapters { opacity: 1; }
+  .chapters span { font: 700 12px/1 var(--body); letter-spacing: .12em; text-transform: uppercase; padding: 9px 14px; border-radius: var(--pill); color: var(--ink55); transition: background .3s, color .3s; }
+  .story[data-step="1"] .k1, .story[data-step="2"] .k1 { background: var(--rose); color: var(--white); }
+  .story[data-step="3"] .k2, .story[data-step="4"] .k2 { background: var(--ink); color: var(--white); }
+  .story[data-step="5"] .k3, .story[data-step="6"] .k3 { background: var(--teal); color: var(--white); }
+
+  @media (max-width: 860px) {
+    .rig { width: min(230px, 56vw); top: 44%; }
+    .step { left: 16px !important; right: 16px !important; width: auto; top: auto; bottom: 86px; transform: translateY(30px); text-align: center; background: rgba(255,255,255,.94); padding: 16px 18px; border-radius: 22px; box-shadow: 0 10px 30px rgba(16,18,21,.15); }
+    .story[data-step] .step.t1, .story[data-step] .step.t2, .story[data-step] .step.t3, .story[data-step] .step.t4, .story[data-step] .step.t5 { transform: translateY(30px); }
+    .story[data-step="1"] .t1, .story[data-step="2"] .t2, .story[data-step="3"] .t3, .story[data-step="4"] .t4, .story[data-step="5"] .t5 { transform: none !important; }
+    .step h2 { font-size: 24px; color: var(--ink) !important; }
+    .step p:not(.eyebrow) { font-size: 15px; margin-top: 6px; color: var(--ink70) !important; }
+    .step .eyebrow { color: var(--rose) !important; margin-bottom: 8px; }
+    .pop { display: none; }
+    .floaters img { width: 110px; left: -55px; top: -69px; }
+    .story[data-step="6"] .floaters img { transform: translate(calc(var(--x) * .45), calc(var(--y) * .62)) rotate(var(--r)); }
+    .herocopy { padding-top: 104px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rig, .pop, .step, .floaters img, .scr, .world { transition: none !important; }
+  }
+
+  /* Photo strip that scrolls on its own */
+  .strip { overflow: hidden; padding: 8px 0 0; }
+  .strip .track { display: flex; gap: 18px; width: max-content; animation: drift 60s linear infinite; }
+  .strip figure { margin: 0; width: 300px; aspect-ratio: 4/3; border-radius: var(--r-md); overflow: hidden; position: relative; flex: none; }
+  .strip img { width: 100%; height: 100%; object-fit: cover; }
+  .strip figcaption { position: absolute; left: 14px; bottom: 12px; color: var(--white); font: 800 18px/1 var(--display); text-shadow: 0 2px 10px rgba(0,0,0,.45); }
+  @keyframes drift { to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) { .strip .track { animation: none; } }
+
+  /* Routes and places: a banner of screens + the countries */
+  .travels { text-align: center; }
+  .banner { border-radius: var(--r-lg); overflow: hidden; background: var(--white); box-shadow: 0 20px 50px rgba(16,18,21,.08); display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; max-width: 920px; margin: 0 auto 40px; }
+  .banner img { width: 100%; aspect-ratio: 1320/1500; object-fit: cover; object-position: top; }
+  .travels .btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 26px; }
+
+  /* "And the best part…" bento */
+  .bento { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 230px; gap: 18px; }
+  .card { border-radius: var(--r-lg); padding: 28px; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; }
+  .card h3 { font-size: 28px; }
+  .card p { margin: 8px 0 0; font-size: 15px; opacity: .85; }
+  .card.wide { grid-column: span 2; }
+  .card.tall { grid-row: span 2; }
+  .card.ink { background: var(--ink); color: var(--white); }
+  .card.rose { background: var(--rose); color: var(--white); }
+  .card.teal { background: var(--teal); color: var(--white); }
+  .card.white { background: var(--white); }
+  .card.photo { padding: 0; }
+  .card.photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .card .big { font: 800 64px/1 var(--display); letter-spacing: -0.03em; }
+  .card .chip { position: absolute; top: 24px; right: 24px; background: rgba(255,255,255,.16); color: inherit; padding: 8px 14px; border-radius: var(--pill); font-weight: 700; font-size: 14px; }
+  .card.white .chip { background: var(--sunken); }
+  .flags { font-size: 30px; letter-spacing: 4px; line-height: 1.3; }
+
+  /* Countries row */
+  .countries { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .countries span { background: var(--white); border: 1px solid var(--ink12); padding: 10px 16px; border-radius: var(--pill); font-weight: 600; font-size: 15px; }
+  .countries span.free { background: var(--ink); color: var(--white); border-color: var(--ink); }
+
+  /* Closing CTA over a full-bleed photo */
+  .closing { position: relative; text-align: center; color: var(--white); padding: 150px 0 170px; background: var(--night) url(./img/newzealand.jpg) center/cover; }
+  .closing::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(245,246,247,1) 0%, rgba(16,18,21,.25) 30%, rgba(16,18,21,.65) 100%); }
+  .closing > * { position: relative; }
+  .closing h2 { font-size: clamp(32px, 4.6vw, 52px); max-width: 18ch; margin: 0 auto 26px; }
+
+  /* Footer */
+  footer { background: var(--night); color: #AEB4BC; padding: 64px 0 36px; font-size: 15px; }
+  .cols { display: grid; grid-template-columns: 1.4fr repeat(3, 1fr); gap: 32px; }
+  .cols h4 { font: 700 12px/1 var(--body); letter-spacing: .14em; text-transform: uppercase; color: var(--white); margin: 0 0 16px; }
+  .cols a { display: block; text-decoration: none; padding: 5px 0; }
+  .cols a:hover { color: var(--white); }
+  .cols .brand { color: var(--white); margin-bottom: 14px; }
+  .legal { border-top: 1px solid #22262B; margin-top: 44px; padding-top: 22px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 13px; }
+  .credits { font-size: 12px; color: #8C939B; margin-top: 18px; line-height: 1.6; }
+  .credits a { text-decoration: underline; }
+
+  @media (max-width: 860px) {
+    .navlinks a:not(.cta), .navlinks .sep { display: none; }
+    .bento { grid-template-columns: 1fr 1fr; grid-auto-rows: 200px; }
+    .card.wide { grid-column: span 2; }
+    .cols { grid-template-columns: 1fr 1fr; }
+    section { padding: 72px 0; }
+  }
+  @media (max-width: 520px) {
+    .bento { grid-template-columns: 1fr; }
+    .card.wide, .card.tall { grid-column: auto; grid-row: auto; }
+    .banner { grid-template-columns: 1fr 1fr; }
+    .banner img:nth-child(3) { display: none; }
+    .strip figure { width: 230px; }
   }
 </style>
+</head>
 <body>
-  <h1>Travel AI Pro</h1>
-  <p>Offline destination guides. Last updated 13 October 2026.</p>
-  <a href="./support.html">Support &amp; FAQ</a>
-  <a href="./privacy.html">Privacy policy</a>
-  <a href="./terms.html">Terms of use</a>
+
+<nav>
+  <div class="bar">
+    <a class="brand" href="./"><img src="./img/icon.png" alt="">Travel AI Pro</a>
+    <div class="navlinks">
+      <a href="#ch-prepare">Prepare</a><span class="sep">–</span>
+      <a href="#ch-explore">Explore</a><span class="sep">–</span>
+      <a href="#ch-remember">Remember</a>
+      <a class="cta" href="#get">Get the app</a>
+    </div>
+  </div>
+</nav>
+
+<!--
+  The scrolling story. One phone stays pinned while the page scrolls: the
+  world behind it changes colour by chapter, its screen changes, cards slide
+  out of it, and the copy moves in on the other side. `--p` (0–1) and
+  data-step are set by the script at the bottom of the page.
+-->
+<section class="story" id="story" data-step="0">
+  <span id="ch-prepare" class="anchor" style="top:100vh"></span>
+  <span id="ch-explore" class="anchor" style="top:300vh"></span>
+  <span id="ch-remember" class="anchor" style="top:500vh"></span>
+  <div class="stage">
+    <div class="world photo"></div>
+    <div class="world c-prepare"></div>
+    <div class="world c-explore"></div>
+    <div class="world c-remember"></div>
+
+    <div class="herocopy">
+      <h1>Be a pro before you land</h1>
+      <p class="lead">The apps locals actually use, how to pay, how to get around, and your first hour after landing. Twelve countries, all offline.</p>
+      <div class="ctas"><a class="btn btn-light" href="#get"><img src="./img/icon.png" alt="">Coming soon to the App Store</a></div>
+      <p class="note">Taiwan is free forever. No account needed.</p>
+    </div>
+
+    <div class="floaters" aria-hidden="true">
+      <img src="./img/kyoto.jpg" alt="" style="--x:-330px;--y:-150px;--r:-8deg">
+      <img src="./img/santorini.jpg" alt="" style="--x:320px;--y:-190px;--r:7deg">
+      <img src="./img/seoul.jpg" alt="" style="--x:-390px;--y:120px;--r:6deg">
+      <img src="./img/queenstown.jpg" alt="" style="--x:360px;--y:110px;--r:-6deg">
+      <img src="./img/hongkong.jpg" alt="" style="--x:-200px;--y:250px;--r:-4deg">
+      <img src="./img/london.jpg" alt="" style="--x:220px;--y:260px;--r:5deg">
+    </div>
+
+    <div class="rig">
+      <div class="phone">
+        <img class="scr s0" src="./img/3-countries.jpg" alt="Pick a destination">
+        <img class="scr s1" src="./img/3-countries.jpg" alt="">
+        <img class="scr s2" src="./img/5-money.jpg" alt="" loading="lazy">
+        <img class="scr s3" src="./img/4-transport.jpg" alt="" loading="lazy">
+        <img class="scr s4" src="./img/1-loop.jpg" alt="" loading="lazy">
+        <img class="scr s5" src="./img/2-map.jpg" alt="" loading="lazy">
+      </div>
+      <div class="pop p1 left"><b>🇯🇵 Japan</b><span>Suica in Apple Wallet</span></div>
+      <div class="pop p2 right"><b>✓ Tap to pay</b><span>7-Eleven, FamilyMart, chains</span></div>
+      <div class="pop p3 left"><b>🚇 EasyCard</b><span>Buy it in the first five minutes</span></div>
+      <div class="pop p4 right"><b>✨ Day planned</b><span>Built around where you are staying</span></div>
+      <div class="pop p5 left"><b>🏳️ New flag</b><span>Passport stamp collected</span></div>
+    </div>
+
+    <div class="steps">
+      <div class="step t1"><p class="eyebrow">Prepare · pick a country</p><h2>Know the country before you fly</h2><p>Twelve guides, each researched separately and labelled honestly for how deep it goes.</p></div>
+      <div class="step t2"><p class="eyebrow">Prepare · money</p><h2>Know how to pay</h2><p>Cards, cash, and where contactless quietly fails, with the right eSIM and what it costs.</p></div>
+      <div class="step t3"><p class="eyebrow">Explore · transport</p><h2>Get around from minute one</h2><p>Tickets, passes and what the signage looks like, before you reach the gate.</p></div>
+      <div class="step t4"><p class="eyebrow">Explore · routes</p><h2>Walk the city like a local</h2><p>Day-by-day routes and loops you can follow or edit. Works with zero signal.</p></div>
+      <div class="step t5"><p class="eyebrow">Remember · your travels</p><h2>Keep every place you have been</h2><p>Tick off cities, add your photos, collect a flag for every country and share your map.</p></div>
+    </div>
+
+    <div class="chapters" aria-hidden="true"><span class="k1">Prepare</span><span class="k2">Explore</span><span class="k3">Remember</span></div>
+  </div>
+</section>
+
+<div class="strip" aria-label="Some of the cities in the guides">
+  <div class="track">
+    <figure><img src="./img/kyoto.jpg" alt="" loading="lazy"><figcaption>Kyoto</figcaption></figure>
+    <figure><img src="./img/santorini.jpg" alt="" loading="lazy"><figcaption>Santorini</figcaption></figure>
+    <figure><img src="./img/seoul.jpg" alt="" loading="lazy"><figcaption>Seoul</figcaption></figure>
+    <figure><img src="./img/queenstown.jpg" alt="" loading="lazy"><figcaption>Queenstown</figcaption></figure>
+    <figure><img src="./img/hongkong.jpg" alt="" loading="lazy"><figcaption>Hong Kong</figcaption></figure>
+    <figure><img src="./img/hanoi.jpg" alt="" loading="lazy"><figcaption>Hanoi</figcaption></figure>
+    <figure><img src="./img/london.jpg" alt="" loading="lazy"><figcaption>London</figcaption></figure>
+    <figure><img src="./img/rome.jpg" alt="" loading="lazy"><figcaption>Rome</figcaption></figure>
+    <figure><img src="./img/bangkok.jpg" alt="" loading="lazy"><figcaption>Bangkok</figcaption></figure>
+    <!-- The same set again, so the loop has no seam. -->
+    <figure aria-hidden="true"><img src="./img/kyoto.jpg" alt="" loading="lazy"><figcaption>Kyoto</figcaption></figure>
+    <figure aria-hidden="true"><img src="./img/santorini.jpg" alt="" loading="lazy"><figcaption>Santorini</figcaption></figure>
+    <figure aria-hidden="true"><img src="./img/seoul.jpg" alt="" loading="lazy"><figcaption>Seoul</figcaption></figure>
+    <figure aria-hidden="true"><img src="./img/queenstown.jpg" alt="" loading="lazy"><figcaption>Queenstown</figcaption></figure>
+    <figure aria-hidden="true"><img src="./img/hongkong.jpg" alt="" loading="lazy"><figcaption>Hong Kong</figcaption></figure>
+    <figure aria-hidden="true"><img src="./img/hanoi.jpg" alt="" loading="lazy"><figcaption>Hanoi</figcaption></figure>
+    <figure aria-hidden="true"><img src="./img/london.jpg" alt="" loading="lazy"><figcaption>London</figcaption></figure>
+    <figure aria-hidden="true"><img src="./img/rome.jpg" alt="" loading="lazy"><figcaption>Rome</figcaption></figure>
+    <figure aria-hidden="true"><img src="./img/bangkok.jpg" alt="" loading="lazy"><figcaption>Bangkok</figcaption></figure>
+  </div>
+</div>
+
+<section class="travels">
+  <div class="wrap">
+    <div class="intro" style="margin-bottom: 40px">
+      <p class="eyebrow">Routes and places</p>
+      <h2>224 places across 36 cities</h2>
+      <p>Ready-made day-by-day routes you can follow or edit. Build your own loop, reorder the stops, and set a time for each.</p>
+    </div>
+    <div class="banner">
+      <img src="./img/3-countries.jpg" alt="The destinations list" loading="lazy">
+      <img src="./img/1-loop.jpg" alt="A walking loop on the map" loading="lazy">
+      <img src="./img/4-transport.jpg" alt="The transport guide" loading="lazy">
+    </div>
+    <div class="countries">
+      <span class="free">Taiwan · free</span><span>Japan</span><span>South Korea</span><span>Hong Kong</span><span>Thailand</span><span>Vietnam</span><span>India</span><span>Italy</span><span>United Kingdom</span><span>Portugal</span><span>Greece</span><span>New Zealand</span>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top: 24px">
+  <div class="wrap">
+    <div class="intro"><h2>And the best part…</h2></div>
+    <div class="bento">
+      <div class="card ink wide">
+        <span class="chip">Airplane mode</span>
+        <h3>Works with zero signal</h3>
+        <p>Everything is stored on your phone, which is exactly when you need it: just landed, no SIM, no wifi.</p>
+      </div>
+      <div class="card photo tall"><img src="./img/queenstown.jpg" alt="" loading="lazy"></div>
+      <div class="card rose">
+        <h3>Taiwan, free forever</h3>
+        <p>The deepest guide in the app. No account, no card.</p>
+      </div>
+      <div class="card white">
+        <div class="big">157</div>
+        <p>apps covered, with setup walked through screen by screen</p>
+      </div>
+      <div class="card teal wide">
+        <h3>Labelled honestly</h3>
+        <p>Every guide shows how deep its coverage goes, so you can see what you are getting before you subscribe.</p>
+      </div>
+      <div class="card white">
+        <div class="flags" aria-label="Flags of the twelve countries">🇹🇼🇯🇵🇰🇷🇭🇰🇹🇭🇻🇳🇮🇳🇮🇹🇬🇧🇵🇹🇬🇷🇳🇿</div>
+        <p>12 countries, 36 cities</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="closing" id="get">
+  <h2>Land like a local on your next trip</h2>
+  <a class="btn btn-light" href="./support.html"><img src="./img/icon.png" alt="">Coming soon to the App Store</a>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="cols">
+      <div>
+        <a class="brand" href="./"><img src="./img/icon.png" alt="">Travel AI Pro</a>
+        <p style="margin:0;max-width:22rem">Offline destination guides: be a pro before you land.</p>
+      </div>
+      <div>
+        <h4>The app</h4>
+        <a href="#prepare">Prepare</a>
+        <a href="#explore">Explore</a>
+        <a href="#remember">Remember</a>
+      </div>
+      <div>
+        <h4>Help &amp; support</h4>
+        <a href="./support.html">Support &amp; FAQ</a>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <a href="./privacy.html">Privacy policy</a>
+        <a href="./terms.html">Terms of use</a>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© 2026 Travel AI Pro</span>
+      <span><a href="./terms.html">Terms</a> · <a href="./privacy.html">Privacy</a> · <a href="./support.html">Support</a></span>
+    </div>
+    <p class="credits">Photos from Wikimedia Commons:
+      Taipei skyline by 迷惘的人生 (<a href="https://commons.wikimedia.org/wiki/File:Taipei_Skyline_at_blue_hour_20260623.jpg">CC BY-SA 4.0</a>) ·
+      Milford Sound by Krzysztof Golik (<a href="https://commons.wikimedia.org/wiki/File:Milford_Sound_in_Fiordland_National_Park_01.jpg">CC BY-SA 4.0</a>) ·
+      Fushimi Inari by Basile Morin (<a href="https://commons.wikimedia.org/wiki/File:Torii_path_with_lantern_at_Fushimi_Inari_Taisha_Shrine,_Kyoto,_Japan.jpg">CC BY-SA 4.0</a>) ·
+      Oia by Giles Laurent (<a href="https://commons.wikimedia.org/wiki/File:1000_Three_domes_of_Oia_in_Santorini_Photo_by_Giles_Laurent.jpg">CC BY-SA 4.0</a>) ·
+      N Seoul Tower by kallerna (<a href="https://commons.wikimedia.org/wiki/File:N_Seoul_Tower_view_2.jpg">CC BY-SA 4.0</a>) ·
+      Queenstown Bay by Krzysztof Golik (<a href="https://commons.wikimedia.org/wiki/File:Queenstown_Bay_Lake_Wakatipu_04.jpg">CC BY-SA 4.0</a>) ·
+      Victoria Harbour by Diego Delso (<a href="https://commons.wikimedia.org/wiki/File:Vista_del_Puerto_de_Victoria_desde_Sky100,_Hong_Kong,_2013-08-09,_DD_10.JPG">CC BY-SA 3.0</a>) ·
+      Hoan Kiem Lake by Vyacheslav Argenberg (<a href="https://commons.wikimedia.org/wiki/File:Hanoi,_Vietnam,_Hoan_Kiem_Lake.jpg">CC BY 4.0</a>) ·
+      Westminster by Colin (<a href="https://commons.wikimedia.org/wiki/File:Big_Ben_at_sunset_-_2014-10-27_17-30.jpg">CC BY-SA 4.0</a>) ·
+      Trevi Fountain by Diego Delso (<a href="https://commons.wikimedia.org/wiki/File:Fuente_de_Trevi,_Roma,_Italia,_2022-09-15,_DD_02.jpg">CC BY-SA 4.0</a>) ·
+      Grand Palace by Bjørn Erik Pedersen (<a href="https://commons.wikimedia.org/wiki/File:A_roof_of_a_building_at_the_Grand_Palace,_Bangkok,_sunrise,_2017.jpg">CC BY-SA 4.0</a>).
+    </p>
+  </div>
+</footer>
+
+
+<script>
+  // Drive the story from the scroll position: which step is showing (data-step),
+  // how far the hero has been scrolled away (--p0), and where the phone sits.
+  (function () {
+    var story = document.getElementById('story');
+    if (!story) return;
+    var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // Per step: phone x offset (as a share of the viewport), y, rotation.
+    // It starts low in the hero, then swaps sides opposite the copy.
+    var poses = [[0, 0, 0], [-.18, 0, -4], [.18, 0, 4], [-.18, 0, -3], [.18, 0, 3], [-.18, 0, -2], [0, 0, 0]];
+    var last = -1, ticking = false;
+    function update() {
+      ticking = false;
+      var r = story.getBoundingClientRect();
+      var vh = window.innerHeight;
+      var y = Math.min(Math.max(-r.top, 0), r.height - vh);
+      var stepF = y / vh;                       // one viewport of scroll per step
+      var step = Math.min(6, Math.floor(stepF + 0.35));
+      var narrow = window.innerWidth <= 860;
+      story.style.setProperty('--p0', Math.min(stepF / 0.8, 1).toFixed(3));
+      var pose = poses[step];
+      // A slow drift inside each step, so the phone is never quite still.
+      var local = stepF - Math.floor(stepF);
+      var drift = still ? 0 : Math.sin(local * Math.PI * 2) * 10;
+      var x = narrow ? 0 : pose[0] * window.innerWidth;
+      // In the hero the phone starts just under the copy, then rises to centre.
+      var copy = story.querySelector('.herocopy .note');
+      var rig = story.querySelector('.rig');
+      var start = 0;
+      if (copy && rig) {
+        var below = copy.offsetTop + copy.offsetHeight + 36;   // where its top should sit
+        var centre = (narrow ? 0.44 : 0.5) * vh;                 // matches .rig's top in the CSS
+        start = Math.max(0, below - (centre - rig.offsetHeight / 2));
+      }
+      var yy = (step === 0 ? start * (1 - Math.min(stepF / 0.8, 1)) : 0) + drift;
+      story.style.setProperty('--rx', x.toFixed(1) + 'px');
+      story.style.setProperty('--ry', yy.toFixed(1) + 'px');
+      story.style.setProperty('--rr', (narrow ? pose[2] / 2 : pose[2]) + (still ? 0 : drift / 6) + 'deg');
+      if (step !== last) { story.dataset.step = String(step); last = step; }
+    }
+    function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    update();
+  })();
+</script>
 </body>
 </html>
